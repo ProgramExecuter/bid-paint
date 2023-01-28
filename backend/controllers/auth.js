@@ -32,10 +32,13 @@ const registerUser = async (req, res) => {
   await newUser.save();
 
   // Create a JsonWebToken for this login(signup), and return it
-  const token = createJWT({
-    _id: newUser._id,
-    username: newUser.username,
-  });
+  const token = createJWT(
+    {
+      _id: newUser._id,
+      username: newUser.username,
+    },
+    { expiresIn: "3d" }
+  );
 
   // Return the result
   res.status(200).json({ success: true, token });
