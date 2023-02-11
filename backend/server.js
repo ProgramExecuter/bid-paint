@@ -1,19 +1,21 @@
-// Import from packages
+// Import packages
 import express from "express";
 import dotenv from "dotenv";
 
-// Import from files
+// Import files-functions
 import authRoute from "./routes/auth.js";
 import mongoose from "mongoose";
 
+// Attach the complete application to 'app'
 const app = express();
 
 // Configs / Setups / Middlewares
 dotenv.config({ path: "config/.env" }); // Env variable config
-app.use(express.json()); // Use JSON from requests as object in backend for node.js
+app.use(express.json()); // Use JSON from requests as object
 
-// Connect to the Database
+// Connect/Setup to the Database
 mongoose.set("strictQuery", false);
+
 mongoose.connect(process.env.MONGOURI, (err) => {
   if (err) console.log(err.message);
   else console.log("DB Connected");
