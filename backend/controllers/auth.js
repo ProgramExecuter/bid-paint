@@ -14,11 +14,12 @@ const loginUser = (req, res) => {
  */
 const registerUser = async (req, res) => {
   // Check if username and password are present
-  if (!req.body.username || !req.body.password)
+  if (!req.body.username || !req.body.password) {
     return res.status(400).json({
       success: false,
       message: "Username and Password are required.",
     });
+  }
 
   // Hash the password
   req.body.password = hashPassword(req.body.password);
