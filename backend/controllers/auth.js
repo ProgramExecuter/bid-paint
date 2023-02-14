@@ -1,6 +1,6 @@
 // Import files-functions
 import User from "../models/user.js";
-import { hashPassword, createJWT } from "../utils/utils.js";
+import { hashPassword, createJWT, comparePassword } from "../utils/utils.js";
 
 /**
  * @description Login User
@@ -10,8 +10,52 @@ import { hashPassword, createJWT } from "../utils/utils.js";
  * 3. Compare the passed password with crypted password in DB.
  * 4. If all goes well, then create and return a JWT.
  */
-const loginUser = (req, res) => {
-  res.status(200).json("Login User");
+const loginUser = async (req, res) => {
+  // Check if username and password are present
+  if (!req.body.username || !req.body.password) {
+    return res.status(400).json({
+      success: false,
+      message: "Username and Password are required.",
+    });
+  }
+
+  // Fetch the user from DB
+  const fetchedUser = await User.findOne({ username: req.body.username });
+
+  // No such user found
+  if (!fetchedUser) {
+    return res.status(404).json({
+      success: false,
+      message: "Username or Password incorrect.",
+    });
+  }
+
+  // Compare the hashed password with the provided password
+  const passwordMatched = comparePassword(
+    req.body.password,
+    fetchedUser.password
+  );
+
+  // Incorrect Password
+  if (!passwordMatched) {
+    return res.status(404).json({
+      success: false,
+      message: "Username or Password incorrect.",
+    });
+  }
+
+  // Create a JsonWebToken for this login(signup)
+  const token = createJWT(
+    { _id: fetchedUser._id, username: fetchedUser.username },
+    { expiresIn: "3d" }
+  );
+
+  // Return the result
+  res.status(200).json({
+    success: true,
+    user: fetchedUser,
+    jwt: token,
+  });
 };
 
 /**
@@ -37,7 +81,7 @@ const registerUser = async (req, res) => {
   const newUser = new User(req.body);
   await newUser.save();
 
-  // Create a JsonWebToken for this login(signup)
+  // Create a JsonWebToken for this signup
   const token = createJWT(
     { _id: newUser._id, username: newUser.username },
     { expiresIn: "3d" }

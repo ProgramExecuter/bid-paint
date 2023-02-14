@@ -8,6 +8,11 @@ export const hashPassword = (pass) => {
   return hashedPass;
 };
 
+// Check if normal and hashed password matches
+export const comparePassword = (password, hashedPassword) => {
+  return bcrypt.compareSync(password, hashedPassword);
+};
+
 // Create a Json Web Token and return it
 export const createJWT = (data) => {
   const token = jwt.sign(data, process.env.JWT_SECRET_KEY);
