@@ -3,14 +3,23 @@ import User from "../models/user.js";
 import { hashPassword, createJWT } from "../utils/utils.js";
 
 /**
- * * LOGIN USER
+ * @description Login User
+ * @Steps -
+ * 1. Check if 'username' and 'password' are present.
+ * 2. Fetch the user from DB.
+ * 3. Compare the passed password with crypted password in DB.
+ * 4. If all goes well, then create and return a JWT.
  */
 const loginUser = (req, res) => {
   res.status(200).json("Login User");
 };
 
 /**
- * * REGISTER USER
+ * @description Register User
+ * @Steps -
+ * 1. Check if 'username' and 'password' are present.
+ * 2. Hash the password, and save the details in DB.
+ * 3. If all goes well, then create and return a JWT.
  */
 const registerUser = async (req, res) => {
   // Check if username and password are present
