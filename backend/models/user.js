@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: [true, "Repeated Username"],
+    unique: [true, "Username already taken"],
   },
   password: {
     type: String,

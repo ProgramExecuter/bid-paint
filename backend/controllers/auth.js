@@ -3,7 +3,7 @@ import User from "../models/user.js";
 import { hashPassword, createJWT, comparePassword } from "../utils/utils.js";
 
 /**
- * @description Login User
+ * @description LOGIN USER
  * @Steps -
  * 1. Check if 'username' and 'password' are present.
  * 2. Fetch the user from DB.
@@ -59,7 +59,7 @@ const loginUser = async (req, res) => {
 };
 
 /**
- * @description Register User
+ * @description REGISTER USER
  * @Steps -
  * 1. Check if 'username' and 'password' are present.
  * 2. Hash the password, and save the details in DB.
