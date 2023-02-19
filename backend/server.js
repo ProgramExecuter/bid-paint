@@ -1,10 +1,11 @@
 // Import packages
 import express from "express";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 
 // Import files-functions
 import authRoute from "./routes/auth.js";
-import mongoose from "mongoose";
+import paintingRoute from "./routes/painting.js";
 
 // Attach the complete application to 'app'
 const app = express();
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGOURI, (err) => {
 
 // Attach Routes
 app.use("/api/auth", authRoute);
+app.use("/api/painting", paintingRoute);
 
 // Server Setup
 const PORT = process.env.PORT || 3000;
