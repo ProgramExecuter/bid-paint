@@ -2,11 +2,12 @@
 import express from "express";
 
 // Import files-functions
-import { getPaintings } from "../controllers/painting.js";
+import { addPainting, getPaintings } from "../controllers/painting.js";
 
 const router = express.Router();
 
-// Painiting Route
+// Painting Routes
 router.get("/", getPaintings);
+router.post("/", addPainting);
 
 export default router;
