@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Bid Paint is an web-app that helps to find good paintings and bid on them.",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
