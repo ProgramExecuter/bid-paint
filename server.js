@@ -12,13 +12,13 @@ const app = express();
 dotenv.config();
 app.use(express.json()); // To parse the req.body to JSON
 
-// Attaching Routes
-app.use("/api", routes);
-
 // Connecting to DB
 mongoose.connect(process.env.MONGOURL).catch((err) => {
   console.log(err.message);
 });
+
+// Attaching Routes
+app.use("/api", routes);
 
 // Server setup
 const PORT = process.env.PORT || 3000;

@@ -1,6 +1,15 @@
-export const getAllPaintings = (req, res) => {
-  console.log(req.body);
-  res.status(200).json("Get all paintings");
+// Import files-functions
+import Painting from "../models/painting.js";
+
+export const getAllPaintings = async (req, res) => {
+  try {
+    const paintings = await Painting.find();
+
+    res.status(200).json(paintings);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(404);
+  }
 };
 
 export const addPainting = (req, res) => {
