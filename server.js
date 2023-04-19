@@ -17,8 +17,7 @@ app.use("/api", routes);
 
 // Connecting to DB
 mongoose.connect(process.env.MONGOURL).catch((err) => {
-  if (err) console.log(err);
-  else console.log("Connected to DB");
+  console.log(err.message);
 });
 
 // Server setup
