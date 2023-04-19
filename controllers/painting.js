@@ -1,4 +1,5 @@
 export const getAllPaintings = (req, res) => {
+  console.log(req.body);
   res.status(200).json("Get all paintings");
 };
 
