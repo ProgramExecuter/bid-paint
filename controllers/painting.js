@@ -12,8 +12,16 @@ export const getAllPaintings = async (req, res) => {
   }
 };
 
-export const addPainting = (req, res) => {
-  res.status(200).json("Add new painting");
+export const addPainting = async (req, res) => {
+  try {
+    const newPainting = new Painting(req.body);
+    await newPainting.save();
+
+    res.status(201).json(newPainting);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(400);
+  }
 };
 
 export const getParticularPainting = (req, res) => {
