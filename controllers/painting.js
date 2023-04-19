@@ -24,8 +24,18 @@ export const addPainting = async (req, res) => {
   }
 };
 
-export const getParticularPainting = (req, res) => {
-  res.status(200).json("Get a particular painting");
+export const getParticularPainting = async (req, res) => {
+  try {
+    const foundPainting = await Painting.findById(req.params.id);
+
+    // Painting not found
+    if (!foundPainting) throw Error();
+
+    res.status(200).json(foundPainting);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(404);
+  }
 };
 
 export const editParticularPainting = (req, res) => {
