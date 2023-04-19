@@ -20,7 +20,7 @@ export const addPainting = async (req, res) => {
     res.status(201).json(newPainting);
   } catch (err) {
     console.log(err.message);
-    res.sendStatus(400);
+    res.status(400).json(err.message);
   }
 };
 
