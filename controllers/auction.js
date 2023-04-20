@@ -13,7 +13,14 @@ export const getAllAuctions = async (req, res) => {
 };
 
 export const createAuction = (req, res) => {
-  res.status(200).json("Create auction");
+  try {
+    const newAuction = new Auction(req.body);
+
+    res.status(201).json(newAuction);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(400);
+  }
 };
 
 export const getParticularAuction = (req, res) => {
