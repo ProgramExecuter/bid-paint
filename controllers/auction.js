@@ -12,9 +12,10 @@ export const getAllAuctions = async (req, res) => {
   }
 };
 
-export const createAuction = (req, res) => {
+export const createAuction = async (req, res) => {
   try {
     const newAuction = new Auction(req.body);
+    await newAuction.save();
 
     res.status(201).json(newAuction);
   } catch (err) {
