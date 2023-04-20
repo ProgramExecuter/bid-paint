@@ -38,8 +38,23 @@ export const getParticularPainting = async (req, res) => {
   }
 };
 
-export const editParticularPainting = (req, res) => {
-  res.status(200).json("Edit a particular painting");
+export const editParticularPainting = async (req, res) => {
+  try {
+    // Cannot update 'title' or 'image'
+    if (req.body.title) throw Error("Title cannot be updated");
+    if (req.body.picUrl) throw Error("Image cannot be updated");
+
+    const editedPainting = await Painting.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { returnDocument: "after" }
+    );
+
+    res.status(200).json(editedPainting);
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json(err.message);
+  }
 };
 
 export const deleteParticularPainting = (req, res) => {
