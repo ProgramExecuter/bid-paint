@@ -4,11 +4,18 @@ const auctionSchema = new Schema({
   painting: {
     type: Types.ObjectId,
     ref: "Painting",
+    required: [true, "Painting is required"],
   },
   bids: [
     {
-      username: [String, "Username is required"],
-      bidAmount: [Number, "Bid amount is required"],
+      username: {
+        type: String,
+        required: [true, "Username is required"],
+      },
+      bidAmount: {
+        type: Number,
+        required: [true, "Bid amount is required"],
+      },
     },
   ],
 });
