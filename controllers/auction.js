@@ -3,7 +3,7 @@ import Auction from "../models/auction.js";
 
 export const getAllAuctions = async (req, res) => {
   try {
-    const auctions = await Auction.find();
+    const auctions = await Auction.find().populate("painting");
 
     res.status(200).json(auctions);
   } catch (err) {

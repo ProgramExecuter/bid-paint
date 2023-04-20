@@ -1,8 +1,8 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const auctionSchema = new Schema({
   painting: {
-    type: Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Painting",
     required: [true, "Painting is required"],
   },
