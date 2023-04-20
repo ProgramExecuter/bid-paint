@@ -57,6 +57,13 @@ export const editParticularPainting = async (req, res) => {
   }
 };
 
-export const deleteParticularPainting = (req, res) => {
-  res.status(200).json("Delete a particular painting");
+export const deleteParticularPainting = async (req, res) => {
+  try {
+    const deletedPainting = await Painting.findByIdAndDelete(req.params.id);
+
+    res.status(200).json(deletedPainting);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
 };
