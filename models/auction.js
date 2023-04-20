@@ -1,8 +1,8 @@
-import mongoose, { Schema, Model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 const auctionSchema = new Schema({
   painting: {
-    type: mongoose.Types.ObjectId,
+    type: Types.ObjectId,
     ref: "Painting",
   },
   bids: [
@@ -13,4 +13,4 @@ const auctionSchema = new Schema({
   ],
 });
 
-export default Model("Auction", auctionSchema);
+export default model("Auction", auctionSchema);

@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const paintingSchema = new Schema({
   title: {
@@ -13,4 +13,4 @@ const paintingSchema = new Schema({
   description: String,
 });
 
-export default mongoose.model("Painting", paintingSchema);
+export default model("Painting", paintingSchema);
