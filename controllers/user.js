@@ -46,6 +46,19 @@ export const userLogin = async (req, res) => {
   }
 };
 
-export const editUserDetails = (req, res) => {
-  res.status(200).json("PATCH /user/:id");
+export const editUserDetails = async (req, res) => {
+  try {
+    const { username, ...data } = req.body;
+
+    const editedUserDetails = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: data },
+      { returnDocument: "after" }
+    );
+
+    res.status(200).json(editedUserDetails);
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json(err.message);
+  }
 };
