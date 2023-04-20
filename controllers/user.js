@@ -62,3 +62,16 @@ export const editUserDetails = async (req, res) => {
     res.status(400).json(err.message);
   }
 };
+
+export const deleteUser = async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+    if (!deletedUser) throw Error();
+
+    res.status(200).json(deletedUser);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(404);
+  }
+};
