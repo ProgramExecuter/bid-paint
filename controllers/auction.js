@@ -24,8 +24,15 @@ export const createAuction = async (req, res) => {
   }
 };
 
-export const getParticularAuction = (req, res) => {
-  res.status(200).json("Get a particular auction");
+export const getParticularAuction = async (req, res) => {
+  try {
+    const foundAuction = await Auction.findById(req.params.id);
+
+    res.status(200).json(foundAuction);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(404);
+  }
 };
 
 export const makeBidOnAuction = (req, res) => {
