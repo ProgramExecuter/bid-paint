@@ -1,5 +1,15 @@
-export const getAllAuctions = (req, res) => {
-  res.status(200).json("Get all auctions");
+// Import files-functions
+import Auction from "../models/auction.js";
+
+export const getAllAuctions = async (req, res) => {
+  try {
+    const auctions = await Auction.find();
+
+    res.status(200).json(auctions);
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(404);
+  }
 };
 
 export const createAuction = (req, res) => {
