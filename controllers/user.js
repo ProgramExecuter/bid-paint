@@ -28,8 +28,22 @@ export const userSignup = async (req, res) => {
   }
 };
 
-export const userLogin = (req, res) => {
-  res.status(200).json("POST /user/login");
+export const userLogin = async (req, res) => {
+  try {
+    if (!req.body.username)
+      return res.status(401).json("Username or password incorrect.");
+
+    const foundUser = await User.findOne({ username: req.body.username });
+
+    if (!foundUser || req.body.password !== foundUser.password) {
+      res.status(401).json("Username or password incorrect.");
+    } else {
+      res.status(200).json("Login successfull");
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json(err.message);
+  }
 };
 
 export const editUserDetails = (req, res) => {

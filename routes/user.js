@@ -12,8 +12,8 @@ import {
 const router = express.Router();
 
 // Attach routes
-router.post("/signup", userSignup).all("*", (req, res) => res.sendStatus(404));
-router.post("/login", userLogin).all("*", (req, res) => res.sendStatus(404));
+router.post("/signup", userSignup);
+router.post("/login", userLogin);
 router.get("/:id", getParticularUser);
 router.patch("/:id", editUserDetails);
 
