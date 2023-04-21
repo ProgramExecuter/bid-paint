@@ -12,6 +12,7 @@ const userSchema = new Schema({
   },
   name: String,
   status: String,
+  token: String,
 });
 
 export default model("User", userSchema);
