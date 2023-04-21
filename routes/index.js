@@ -5,6 +5,7 @@ import express from "express";
 import paintingRoutes from "./painting.js";
 import auctionRoutes from "./auction.js";
 import userRoutes from "./user.js";
+import authRoutes from "./auth.js";
 
 const router = express.Router();
 
@@ -12,5 +13,6 @@ const router = express.Router();
 router.use("/painting", paintingRoutes);
 router.use("/auction", auctionRoutes);
 router.use("/user", userRoutes);
+router.use("/auth", authRoutes);
 
 export default router;
