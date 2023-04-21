@@ -8,13 +8,14 @@ import {
   getParticularAuction,
   makeBidOnAuction,
 } from "../controllers/auction.js";
+import { isAuthenticated } from "../utils/authUtils.js";
 
 const router = express.Router();
 
 // Attach all routes
 router.get("/", getAllAuctions);
-router.post("/", createAuction);
+router.post("/", isAuthenticated, createAuction);
 router.get("/:id", getParticularAuction);
-router.post("/:id/makeBid", makeBidOnAuction);
+router.post("/:id/makeBid", isAuthenticated, makeBidOnAuction);
 
 export default router;

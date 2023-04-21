@@ -2,5 +2,23 @@
 import jwt from "jsonwebtoken";
 
 export const generateJwt = (payload) => {
-  return jwt.sign(payload, process.env.JWT_KEY, { expiresIn: 60 });
+  return jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1d" });
+};
+
+export const isAuthenticated = (req, res, next) => {
+  try {
+    if (!req.headers.authorization) throw Error("Unauthorized");
+
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY);
+
+    if (!decodedToken || !decodedToken.username) throw Error("Unauthorized");
+
+    // To pass on the username of token
+    res.locals.username = decodedToken.username;
+
+    next();
+  } catch (err) {
+    res.status(401).json(err.message);
+  }
 };

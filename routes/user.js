@@ -7,12 +7,13 @@ import {
   editUserDetails,
   deleteUser,
 } from "../controllers/user.js";
+import { isAuthenticated } from "../utils/authUtils.js";
 
 const router = express.Router();
 
 // Attach routes
 router.get("/:id", getParticularUser);
-router.patch("/:id", editUserDetails);
-router.delete("/:id", deleteUser);
+router.patch("/:id", isAuthenticated, editUserDetails);
+router.delete("/:id", isAuthenticated, deleteUser);
 
 export default router;
