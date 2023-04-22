@@ -7,13 +7,17 @@ import { generateJwt } from "../utils/authUtils.js";
 
 export const userSignup = async (req, res) => {
   try {
-    req.body.token = generateJwt({ username: req.body.username });
-
     // Encrypt the password
     const encryptedPassword = bcrypt.hashSync(req.body.password, 8);
     req.body.password = encryptedPassword;
 
     const newUser = new User(req.body);
+
+    newUser.token = generateJwt({
+      username: req.body.username,
+      id: newUser._id,
+    });
+
     await newUser.save();
 
     res.status(200).json(newUser);
@@ -39,7 +43,11 @@ export const userLogin = async (req, res) => {
     if (!foundUser || !passwordMatch) {
       res.status(401).json("Username or password incorrect.");
     } else {
-      foundUser.token = generateJwt({ username: foundUser.username });
+      foundUser.token = generateJwt({
+        username: foundUser.username,
+        id: foundUser._id,
+      });
+
       await foundUser.save();
 
       res.status(200).json(foundUser);

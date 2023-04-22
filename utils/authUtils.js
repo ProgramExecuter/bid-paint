@@ -15,7 +15,7 @@ export const isAuthenticated = (req, res, next) => {
     if (!decodedToken || !decodedToken.username) throw Error("Unauthorized");
 
     // To pass on the username of token
-    res.locals.username = decodedToken.username;
+    res.locals.user = { username: decodedToken.username, id: decodedToken.id };
 
     next();
   } catch (err) {
