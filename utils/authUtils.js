@@ -5,7 +5,7 @@ export const generateJwt = (payload) => {
   return jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1d" });
 };
 
-export const isAuthenticated = (req, res, next) => {
+export const isAuthenticated = async (req, res, next) => {
   try {
     if (!req.headers.authorization) throw Error("Unauthorized");
 
@@ -13,6 +13,10 @@ export const isAuthenticated = (req, res, next) => {
     const decodedToken = jwt.verify(token, process.env.JWT_KEY);
 
     if (!decodedToken || !decodedToken.username) throw Error("Unauthorized");
+
+    const foundUser = await User.findById(decoded.id);
+
+    if (!foundUser) throw Error("Unauthorized");
 
     // To pass on the username of token
     res.locals.user = { username: decodedToken.username, id: decodedToken.id };
