@@ -1,6 +1,9 @@
 // Import packages
 import jwt from "jsonwebtoken";
 
+// Import files-functions
+import User from "../models/user.js";
+
 export const generateJwt = (payload) => {
   return jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1d" });
 };
@@ -14,7 +17,7 @@ export const isAuthenticated = async (req, res, next) => {
 
     if (!decodedToken || !decodedToken.username) throw Error("Unauthorized");
 
-    const foundUser = await User.findById(decoded.id);
+    const foundUser = await User.findById(decodedToken.id);
 
     if (!foundUser) throw Error("Unauthorized");
 
@@ -23,6 +26,7 @@ export const isAuthenticated = async (req, res, next) => {
 
     next();
   } catch (err) {
+    console.log(err.message);
     res.status(401).json(err.message);
   }
 };

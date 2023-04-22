@@ -18,7 +18,7 @@ export const addPainting = async (req, res) => {
     newPainting.user = res.locals.user.id;
     await newPainting.save();
 
-    res.status(201).json(newPainting.populate("user"));
+    res.status(201).json(newPainting);
   } catch (err) {
     console.log(err.message);
     res.status(400).json(err.message);
