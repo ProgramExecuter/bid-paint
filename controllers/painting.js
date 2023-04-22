@@ -45,7 +45,7 @@ export const getParticularPainting = async (req, res) => {
     // Painting not found
     if (!foundPainting) throw Error();
 
-    res.status(200).json(foundPainting.populate("user"));
+    res.status(200).json(foundPainting);
   } catch (err) {
     console.log(err.message, " on Route ", "'GET /painting/:id'");
     res.status(404).json({ success: false, error: err.message });
@@ -54,20 +54,21 @@ export const getParticularPainting = async (req, res) => {
 
 export const editParticularPainting = async (req, res) => {
   try {
-    // Cannot update 'title' or 'image'
-    if (req.body.title) throw Error("Title cannot be updated");
-    if (req.body.picUrl) throw Error("Image cannot be updated");
+    const foundPainting = await Painting.findById(req.params.id);
 
-    const editedPainting = await Painting.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { returnDocument: "after" }
-    );
+    if (!foundPainting) throw Error();
 
-    res.status(200).json(editedPainting.populate("user"));
+    if (res.locals.user.id != foundPainting.user)
+      return res.status(401).json({ success: false, error: "Unauthorized" });
+
+    if (req.body.description) foundPainting.description = req.body.description;
+
+    await foundPainting.save();
+
+    res.status(200).json(foundPainting);
   } catch (err) {
     console.log(err.message, " on Route ", "'PATCH /painting/:id'");
-    res.status(400).json({ success: false, error: err.message });
+    res.status(404).json({ success: false, error: "Not Found" });
   }
 };
 
