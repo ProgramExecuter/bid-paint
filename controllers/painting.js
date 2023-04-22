@@ -3,9 +3,19 @@ import Painting from "../models/painting.js";
 
 export const getAllPaintings = async (req, res) => {
   try {
-    const paintings = await Painting.find().populate("user");
+    let limit = 10;
+    if (req.query.limit) limit = req.query.limit;
 
-    res.status(200).json(paintings);
+    let page = 1;
+    if (req.query.page) page = req.query.page;
+
+    const paintings = await Painting.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res
+      .status(200)
+      .json({ success: true, limit, page, count: paintings.length, paintings });
   } catch (err) {
     console.log(err.message);
     res.sendStatus(404);
