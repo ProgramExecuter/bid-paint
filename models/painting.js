@@ -11,6 +11,10 @@ const paintingSchema = new Schema({
     required: [true, "picture is required"],
   },
   description: String,
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 export default model("Painting", paintingSchema);
