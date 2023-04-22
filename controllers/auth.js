@@ -7,6 +7,9 @@ import { generateJwt } from "../utils/authUtils.js";
 
 export const userSignup = async (req, res) => {
   try {
+    if (!req.body.username || !req.body.password)
+      throw Error("Username and Password are required");
+
     // Encrypt the password
     const encryptedPassword = bcrypt.hashSync(req.body.password, 8);
     req.body.password = encryptedPassword;
@@ -20,19 +23,23 @@ export const userSignup = async (req, res) => {
 
     await newUser.save();
 
-    res.status(200).json(newUser);
+    res.status(200).json({ success: true, newUser });
   } catch (err) {
-    console.log(err.message);
-    res.status(400).json(err.message);
+    console.log(err.message, " on Route ", "'POST /auth/signup'");
+    res.status(400).json({
+      success: false,
+      error: err.message,
+    });
   }
 };
 
 export const userLogin = async (req, res) => {
   try {
-    if (!req.body.username || !req.body.password)
-      return res.status(401).json("Username or password incorrect.");
+    if (!req.body.username || !req.body.password) throw Error();
 
     const foundUser = await User.findOne({ username: req.body.username });
+
+    if (!foundUser) throw Error();
 
     // Compare the normal and hashed password
     const passwordMatch = bcrypt.compareSync(
@@ -40,8 +47,8 @@ export const userLogin = async (req, res) => {
       foundUser.password
     );
 
-    if (!foundUser || !passwordMatch) {
-      res.status(401).json("Username or password incorrect.");
+    if (!passwordMatch) {
+      throw Error();
     } else {
       foundUser.token = generateJwt({
         username: foundUser.username,
@@ -50,10 +57,12 @@ export const userLogin = async (req, res) => {
 
       await foundUser.save();
 
-      res.status(200).json(foundUser);
+      res.status(200).json({ success: true, loggedUser: foundUser });
     }
   } catch (err) {
-    console.log(err.message);
-    res.status(400).json(err.message);
+    console.log(err.message, " on Route ", "'POST /auth/login'");
+    res
+      .status(401)
+      .json({ success: false, error: "Username or Password incorrect" });
   }
 };
