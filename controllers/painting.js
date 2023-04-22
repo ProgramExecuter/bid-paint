@@ -9,7 +9,10 @@ export const getAllPaintings = async (req, res) => {
     let page = 1;
     if (req.query.page) page = req.query.page;
 
-    const paintings = await Painting.find({})
+    let query = {};
+    if (req.query.userId) query.user = req.query.userId;
+
+    const paintings = await Painting.find(query)
       .skip((page - 1) * limit)
       .limit(limit);
 
