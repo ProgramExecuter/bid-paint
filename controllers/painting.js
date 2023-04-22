@@ -3,7 +3,7 @@ import Painting from "../models/painting.js";
 
 export const getAllPaintings = async (req, res) => {
   try {
-    const paintings = await Painting.find();
+    const paintings = await Painting.find().populate("user");
 
     res.status(200).json(paintings);
   } catch (err) {
@@ -15,9 +15,10 @@ export const getAllPaintings = async (req, res) => {
 export const addPainting = async (req, res) => {
   try {
     const newPainting = new Painting(req.body);
+    newPainting.user = res.locals.user.id;
     await newPainting.save();
 
-    res.status(201).json(newPainting);
+    res.status(201).json(newPainting.populate("user"));
   } catch (err) {
     console.log(err.message);
     res.status(400).json(err.message);
@@ -31,7 +32,7 @@ export const getParticularPainting = async (req, res) => {
     // Painting not found
     if (!foundPainting) throw Error();
 
-    res.status(200).json(foundPainting);
+    res.status(200).json(foundPainting.populate("user"));
   } catch (err) {
     console.log(err.message);
     res.sendStatus(404);
@@ -50,7 +51,7 @@ export const editParticularPainting = async (req, res) => {
       { returnDocument: "after" }
     );
 
-    res.status(200).json(editedPainting);
+    res.status(200).json(editedPainting.populate("user"));
   } catch (err) {
     console.log(err.message);
     res.status(400).json(err.message);
@@ -61,7 +62,7 @@ export const deleteParticularPainting = async (req, res) => {
   try {
     const deletedPainting = await Painting.findByIdAndDelete(req.params.id);
 
-    res.status(200).json(deletedPainting);
+    res.status(200).json(deletedPainting.populate("user"));
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
