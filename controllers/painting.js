@@ -20,8 +20,8 @@ export const getAllPaintings = async (req, res) => {
       .status(200)
       .json({ success: true, limit, page, count: paintings.length, paintings });
   } catch (err) {
-    console.log(err.message);
-    res.sendStatus(404);
+    console.log(err.message, " on Route ", "'GET /painting'");
+    res.status(404).json({ success: false, error: err.message });
   }
 };
 
@@ -33,8 +33,8 @@ export const addPainting = async (req, res) => {
 
     res.status(201).json(newPainting);
   } catch (err) {
-    console.log(err.message);
-    res.status(400).json(err.message);
+    console.log(err.message, " on Route ", "'POST /painting'");
+    res.status(400).json({ success: false, error: err.message });
   }
 };
 
@@ -47,8 +47,8 @@ export const getParticularPainting = async (req, res) => {
 
     res.status(200).json(foundPainting.populate("user"));
   } catch (err) {
-    console.log(err.message);
-    res.sendStatus(404);
+    console.log(err.message, " on Route ", "'GET /painting/:id'");
+    res.status(404).json({ success: false, error: err.message });
   }
 };
 
@@ -66,8 +66,8 @@ export const editParticularPainting = async (req, res) => {
 
     res.status(200).json(editedPainting.populate("user"));
   } catch (err) {
-    console.log(err.message);
-    res.status(400).json(err.message);
+    console.log(err.message, " on Route ", "'PATCH /painting/:id'");
+    res.status(400).json({ success: false, error: err.message });
   }
 };
 
@@ -77,7 +77,7 @@ export const deleteParticularPainting = async (req, res) => {
 
     res.status(200).json(deletedPainting.populate("user"));
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    console.log(err.message, " on Route ", "'DELETE /painting/:id'");
+    res.status(500).json({ success: false, error: err.message });
   }
 };
