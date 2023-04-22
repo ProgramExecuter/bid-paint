@@ -65,7 +65,7 @@ export const editParticularPainting = async (req, res) => {
 
     await foundPainting.save();
 
-    res.status(200).json(foundPainting);
+    res.status(200).json({ success: true, editedPainting: foundPainting });
   } catch (err) {
     console.log(err.message, " on Route ", "'PATCH /painting/:id'");
     res.status(404).json({ success: false, error: "Not Found" });
@@ -74,11 +74,18 @@ export const editParticularPainting = async (req, res) => {
 
 export const deleteParticularPainting = async (req, res) => {
   try {
+    const foundPainting = await Painting.findById(req.params.id);
+
+    if (!foundPainting) throw Error();
+
+    if (res.locals.user.id != foundPainting.user)
+      return res.status(401).json({ success: false, error: "Unauthorized" });
+
     const deletedPainting = await Painting.findByIdAndDelete(req.params.id);
 
-    res.status(200).json(deletedPainting.populate("user"));
+    res.status(200).json({ success: true, deletedPainting });
   } catch (err) {
     console.log(err.message, " on Route ", "'DELETE /painting/:id'");
-    res.status(500).json({ success: false, error: err.message });
+    res.status(404).json({ success: false, error: "Not Found" });
   }
 };
