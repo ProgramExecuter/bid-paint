@@ -8,9 +8,9 @@ const auctionSchema = new Schema({
   },
   bids: [
     {
-      username: {
-        type: String,
-        required: [true, "Username is required"],
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
       },
       bidAmount: {
         type: Number,

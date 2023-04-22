@@ -43,7 +43,9 @@ export const makeBidOnAuction = async (req, res) => {
 
     if (!foundAuction) throw Error();
 
-    const newBidsArr = [...foundAuction.bids, req.body];
+    const newBid = { user: res.locals.id, bidAmount: req.body.bidAmount };
+
+    const newBidsArr = [...foundAuction.bids, newBid];
     foundAuction.bids = newBidsArr;
 
     await foundAuction.save();
