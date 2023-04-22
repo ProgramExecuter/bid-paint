@@ -7,10 +7,10 @@ export const getParticularUser = async (req, res) => {
 
     if (!foundUser) throw Error();
 
-    res.status(200).json(foundUser);
+    res.status(200).json({ success: true, foundUser });
   } catch (err) {
-    console.log(err.message);
-    res.sendStatus(404);
+    console.log(err.message, " on Route ", "'GET /user/:id'");
+    res.status(404).json({ success: false, error: "Not Found" });
   }
 };
 
@@ -26,8 +26,8 @@ export const editUserDetails = async (req, res) => {
 
     res.status(200).json(editedUserDetails);
   } catch (err) {
-    console.log(err.message);
-    res.status(400).json(err.message);
+    console.log(err.message, " on Route ", "'PATCH /user/:id'");
+    res.status(400).json({ success: false, error: err.message });
   }
 };
 
@@ -39,7 +39,7 @@ export const deleteUser = async (req, res) => {
 
     res.status(200).json(deletedUser);
   } catch (err) {
-    console.log(err.message);
-    res.sendStatus(404);
+    console.log(err.message, " on Route ", "'DELETE /user/:id'");
+    res.status(404).json({ success: false, error: "Not Found" });
   }
 };
