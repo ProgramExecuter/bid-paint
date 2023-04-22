@@ -25,7 +25,7 @@ export const userSignup = async (req, res) => {
 
 export const userLogin = async (req, res) => {
   try {
-    if (!req.body.username)
+    if (!req.body.username || !req.body.password)
       return res.status(401).json("Username or password incorrect.");
 
     const foundUser = await User.findOne({ username: req.body.username });
