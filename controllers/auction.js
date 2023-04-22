@@ -3,7 +3,7 @@ import Auction from "../models/auction.js";
 
 export const getAllAuctions = async (req, res) => {
   try {
-    const auctions = await Auction.find().populate("painting");
+    const auctions = await Auction.find().populate("painting bids.user");
 
     res.status(200).json(auctions);
   } catch (err) {
@@ -43,7 +43,7 @@ export const makeBidOnAuction = async (req, res) => {
 
     if (!foundAuction) throw Error();
 
-    const newBid = { user: res.locals.id, bidAmount: req.body.bidAmount };
+    const newBid = { user: res.locals.user.id, bidAmount: req.body.bidAmount };
 
     const newBidsArr = [...foundAuction.bids, newBid];
     foundAuction.bids = newBidsArr;
