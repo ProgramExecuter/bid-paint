@@ -20,14 +20,20 @@ export const userSignup = async (req, res) => {
 
     const newUser = new User(req.body);
 
-    newUser.token = generateJwt({
+    const token = generateJwt({
       username: req.body.username,
       id: newUser._id,
     });
 
+    newUser.token = token;
     await newUser.save();
 
-    res.status(200).json({ success: true, user: newUser });
+    // Returning user result(after filtering)
+    const user = { username: newUser.username };
+    if (newUser.name) user.name = newUser.name;
+    if (newUser.status) user.status = newUser.status;
+
+    res.status(200).json({ success: true, token, user });
   } catch (err) {
     console.log(err.message, " on Route ", "'POST /auth/signup'");
     res.status(400).json({ success: false, error: err.message });
@@ -48,18 +54,17 @@ export const userLogin = async (req, res) => {
       foundUser.password
     );
 
-    if (!passwordMatch) {
-      throw Error();
-    } else {
-      foundUser.token = generateJwt({
-        username: foundUser.username,
-        id: foundUser._id,
-      });
+    if (!passwordMatch) throw Error();
 
-      await foundUser.save();
+    const token = generateJwt({
+      username: foundUser.username,
+      id: foundUser._id,
+    });
 
-      res.status(200).json({ success: true, user: foundUser });
-    }
+    foundUser.token = token;
+    await foundUser.save();
+
+    res.status(200).json({ success: true, token });
   } catch (err) {
     console.log(err.message, " on Route ", "'POST /auth/login'");
     res
