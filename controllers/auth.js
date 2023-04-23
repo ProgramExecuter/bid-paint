@@ -3,7 +3,11 @@ import bcrypt from "bcryptjs";
 
 // Import files-functions
 import User from "../models/user.js";
-import { generateJwt } from "../utils/authUtils.js";
+import {
+  generateJwt,
+  encryptPassword,
+  comparePassword,
+} from "../utils/authUtils.js";
 
 export const userSignup = async (req, res) => {
   try {
@@ -11,7 +15,7 @@ export const userSignup = async (req, res) => {
       throw Error("Username and Password are required");
 
     // Encrypt the password
-    const encryptedPassword = bcrypt.hashSync(req.body.password, 8);
+    const encryptedPassword = encryptPassword(req.body.password, 8);
     req.body.password = encryptedPassword;
 
     const newUser = new User(req.body);
@@ -42,7 +46,7 @@ export const userLogin = async (req, res) => {
     if (!foundUser) throw Error();
 
     // Compare the normal and hashed password
-    const passwordMatch = bcrypt.compareSync(
+    const passwordMatch = comparePassword(
       req.body.password,
       foundUser.password
     );
