@@ -10,7 +10,7 @@ export const getAllPaintings = async (req, res) => {
     if (req.query.page) page = req.query.page;
 
     let query = {};
-    if (req.query.userId) query.user = req.query.userId;
+    if (req.query.username) query.username = req.query.username;
 
     const paintings = await Painting.find(query)
       .skip((page - 1) * limit)
@@ -21,14 +21,14 @@ export const getAllPaintings = async (req, res) => {
       .json({ success: true, limit, page, count: paintings.length, paintings });
   } catch (err) {
     console.log(err.message, " on Route ", "'GET /painting'");
-    res.status(404).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 };
 
 export const addPainting = async (req, res) => {
   try {
     const newPainting = new Painting(req.body);
-    newPainting.user = res.locals.user.id;
+    newPainting.username = res.locals.user.username;
     await newPainting.save();
 
     res.status(201).json({ success: true, painting: newPainting });
@@ -58,7 +58,7 @@ export const editParticularPainting = async (req, res) => {
 
     if (!foundPainting) throw Error();
 
-    if (res.locals.user.id != foundPainting.user)
+    if (res.locals.user.username != foundPainting.username)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     if (req.body.description) foundPainting.description = req.body.description;
@@ -78,7 +78,7 @@ export const deleteParticularPainting = async (req, res) => {
 
     if (!foundPainting) throw Error();
 
-    if (res.locals.user.id != foundPainting.user)
+    if (res.locals.user.username != foundPainting.username)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     const deletedPainting = await Painting.findByIdAndDelete(req.params.id);
