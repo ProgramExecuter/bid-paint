@@ -32,6 +32,15 @@ export const getAllAuctions = async (req, res) => {
 
 export const createAuction = async (req, res) => {
   try {
+    if (!req.body.painting) throw Error();
+
+    const foundPainting = await Painting.findById(req.body.painting);
+
+    if (!foundPainting) throw Error();
+
+    if (res.locals.user.id != foundPainting.user)
+      return res.status(401).json({ success: false, error: "Unauthorized" });
+
     const newAuction = new Auction(req.body);
     await newAuction.save();
 
