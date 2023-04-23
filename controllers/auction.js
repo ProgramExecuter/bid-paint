@@ -5,10 +5,10 @@ export const getAllAuctions = async (req, res) => {
   try {
     const auctions = await Auction.find().populate("painting bids.user");
 
-    res.status(200).json(auctions);
+    res.status(200).json({ success: true, auctions });
   } catch (err) {
-    console.log(err.message);
-    res.sendStatus(404);
+    console.log(err.message, " on Route ", "'GET /auction'");
+    res.status(404).json({ success: false, error: "Not Found" });
   }
 };
 
@@ -17,10 +17,10 @@ export const createAuction = async (req, res) => {
     const newAuction = new Auction(req.body);
     await newAuction.save();
 
-    res.status(201).json(newAuction);
+    res.status(201).json({ success: true, newAuction });
   } catch (err) {
-    console.log(err.message);
-    res.sendStatus(400);
+    console.log(err.message, " on Route ", "'POST /auction'");
+    res.status(400).json({ success: false, error: "Not Found" });
   }
 };
 
@@ -30,10 +30,10 @@ export const getParticularAuction = async (req, res) => {
 
     if (!foundAuction) throw Error();
 
-    res.status(200).json(foundAuction);
+    res.status(200).json({ success: true, auction: foundAuction });
   } catch (err) {
-    console.log(err.message);
-    res.sendStatus(404);
+    console.log(err.message, " on Route ", "'GET /auction/:id'");
+    res.status(404).json({ success: false, error: "Not Found" });
   }
 };
 
@@ -50,9 +50,9 @@ export const makeBidOnAuction = async (req, res) => {
 
     await foundAuction.save();
 
-    res.status(201).json(foundAuction);
+    res.status(201).json({ success: true, biddedAuction: foundAuction });
   } catch (err) {
-    console.log(err.message);
-    res.status(400).json(err.message);
+    console.log(err.message, " on Route ", "'POST /auction/:id/makeBid'");
+    res.status(400).json({ success: false, error: "Bad request" });
   }
 };
