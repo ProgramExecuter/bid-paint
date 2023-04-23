@@ -4,7 +4,10 @@ import { encryptPassword, comparePassword } from "../utils/authUtils.js";
 
 export const getParticularUser = async (req, res) => {
   try {
-    const foundUser = await User.findOne({ username: req.params.username });
+    const foundUser = await User.findOne(
+      { username: req.params.username },
+      "username name status"
+    );
 
     if (!foundUser) throw Error();
 
@@ -25,7 +28,7 @@ export const editUserDetails = async (req, res) => {
     const editedUser = await User.findOneAndUpdate(
       { username: req.params.username },
       { $set: editDetails },
-      { returnDocument: "after" }
+      { returnDocument: "after", fields: "username name status" }
     );
 
     res.status(200).json({ success: true, user: editedUser });
@@ -40,9 +43,10 @@ export const deleteUser = async (req, res) => {
     if (req.params.username != res.locals.loginUser)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
-    const deletedUser = await User.findOneAndDelete({
-      username: req.params.username,
-    });
+    const deletedUser = await User.findOneAndDelete(
+      { username: req.params.username },
+      { select: "username name status" }
+    );
 
     if (!deletedUser) throw Error();
 
@@ -69,7 +73,13 @@ export const updatePassword = async (req, res) => {
     foundUser.password = encryptPassword(req.body.newPassword, 8);
     await foundUser.save();
 
-    res.status(200).json({ success: true, user: foundUser });
+    // Filter user details
+    const { _id, username, name, status } = foundUser;
+    const userDetails = { _id, username };
+    if (name) userDetails.name = name;
+    if (status) userDetails.status = status;
+
+    res.status(200).json({ success: true, user: userDetails });
   } catch (err) {
     console.log(err.message, " on Route ", "'PATCH /user/:id/updatePassword'");
     res.status(401).json({ success: false, error: "Unauthorized" });

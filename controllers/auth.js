@@ -33,8 +33,8 @@ export const userSignup = async (req, res) => {
     newUser.token = token;
     await newUser.save();
 
-    // Returning user result(after filtering)
-    const user = { username: newUser.username };
+    // Filter user details
+    const user = { _id: newUser._id, username: newUser.username };
     if (newUser.name) user.name = newUser.name;
     if (newUser.status) user.status = newUser.status;
 
