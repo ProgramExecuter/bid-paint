@@ -28,7 +28,7 @@ export const getAllPaintings = async (req, res) => {
 export const addPainting = async (req, res) => {
   try {
     const newPainting = new Painting(req.body);
-    newPainting.username = res.locals.user.username;
+    newPainting.username = res.locals.loginUser;
     await newPainting.save();
 
     res.status(201).json({ success: true, painting: newPainting });
@@ -58,7 +58,7 @@ export const editParticularPainting = async (req, res) => {
 
     if (!foundPainting) throw Error();
 
-    if (res.locals.user.username != foundPainting.username)
+    if (foundPainting.username != res.locals.loginUser)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     if (req.body.description) foundPainting.description = req.body.description;
@@ -78,7 +78,7 @@ export const deleteParticularPainting = async (req, res) => {
 
     if (!foundPainting) throw Error();
 
-    if (res.locals.user.username != foundPainting.username)
+    if (foundPainting.username != res.locals.loginUser)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     const deletedPainting = await Painting.findByIdAndDelete(req.params.id);

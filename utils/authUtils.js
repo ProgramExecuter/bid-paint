@@ -16,15 +16,14 @@ export const isAuthenticated = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_KEY);
 
-    if (!decodedToken || !decodedToken.username || !decodedToken.id)
-      throw Error("Unauthorized");
+    if (!decodedToken || !decodedToken.username) throw Error("Unauthorized");
 
-    const foundUser = await User.findById(decodedToken.id);
+    const foundUser = await User.findOne({ username: decodedToken.username });
 
     if (!foundUser) throw Error("Unauthorized");
 
     // To pass on the username of token to next middleware/controller
-    res.locals.user = { username: decodedToken.username, id: decodedToken.id };
+    res.locals.loginUser = decodedToken.username;
 
     next();
   } catch (err) {

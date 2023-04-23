@@ -38,7 +38,7 @@ export const createAuction = async (req, res) => {
 
     if (!foundPainting) throw Error();
 
-    if (res.locals.user.id != foundPainting.user)
+    if (foundPainting.username != res.locals.loginUser)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     const newAuction = new Auction(req.body);

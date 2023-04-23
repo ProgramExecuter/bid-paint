@@ -17,7 +17,7 @@ export const getParticularUser = async (req, res) => {
 
 export const editUserDetails = async (req, res) => {
   try {
-    if (req.params.username != res.locals.user.username)
+    if (req.params.username != res.locals.loginUser)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     const editDetails = { status: req.body.status, name: req.body.name };
@@ -37,7 +37,7 @@ export const editUserDetails = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    if (req.params.username != res.locals.user.username)
+    if (req.params.username != res.locals.loginUser)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     const deletedUser = await User.findOneAndDelete({

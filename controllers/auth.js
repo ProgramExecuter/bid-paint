@@ -28,10 +28,7 @@ export const userSignup = async (req, res) => {
 
     const newUser = new User(req.body);
 
-    const token = generateJwt({
-      username: req.body.username,
-      id: newUser._id,
-    });
+    const token = generateJwt({ username: req.body.username });
 
     newUser.token = token;
     await newUser.save();
@@ -64,10 +61,7 @@ export const userLogin = async (req, res) => {
 
     if (!passwordMatch) throw Error();
 
-    const token = generateJwt({
-      username: foundUser.username,
-      id: foundUser._id,
-    });
+    const token = generateJwt({ username: foundUser.username });
 
     foundUser.token = token;
     await foundUser.save();
