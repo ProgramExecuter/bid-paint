@@ -4,7 +4,7 @@ import { encryptPassword, comparePassword } from "../utils/authUtils.js";
 
 export const getParticularUser = async (req, res) => {
   try {
-    const foundUser = await User.findById(req.params.id);
+    const foundUser = await User.findOne({ username: req.params.username });
 
     if (!foundUser) throw Error();
 
@@ -17,13 +17,13 @@ export const getParticularUser = async (req, res) => {
 
 export const editUserDetails = async (req, res) => {
   try {
-    if (req.params.id != res.locals.user.id)
+    if (req.params.username != res.locals.user.username)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
     const editDetails = { status: req.body.status, name: req.body.name };
 
-    const editedUser = await User.findByIdAndUpdate(
-      req.params.id,
+    const editedUser = await User.findOneAndUpdate(
+      { username: req.params.username },
       { $set: editDetails },
       { returnDocument: "after" }
     );
@@ -37,10 +37,12 @@ export const editUserDetails = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    if (req.params.id != res.locals.user.id)
+    if (req.params.username != res.locals.user.username)
       return res.status(401).json({ success: false, error: "Unauthorized" });
 
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    const deletedUser = await User.findOneAndDelete({
+      username: req.params.username,
+    });
 
     if (!deletedUser) throw Error();
 
@@ -55,7 +57,7 @@ export const updatePassword = async (req, res) => {
   try {
     if (!req.body.oldPassword || !req.body.newPassword) throw Error();
 
-    const foundUser = await User.findById(req.params.id);
+    const foundUser = await User.findOne({ username: req.params.username });
     if (!foundUser) throw Error();
 
     const oldPasswordMatch = comparePassword(

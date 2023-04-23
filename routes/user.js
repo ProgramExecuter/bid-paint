@@ -13,9 +13,9 @@ import { isAuthenticated } from "../utils/authUtils.js";
 const router = express.Router();
 
 // Attach routes
-router.get("/:id", getParticularUser);
-router.patch("/:id", isAuthenticated, editUserDetails);
-router.delete("/:id", isAuthenticated, deleteUser);
-router.patch("/:id/updatePassword", updatePassword);
+router.get("/:username", getParticularUser);
+router.patch("/:username", isAuthenticated, editUserDetails);
+router.delete("/:username", isAuthenticated, deleteUser);
+router.patch("/:username/updatePassword", updatePassword);
 
 export default router;
