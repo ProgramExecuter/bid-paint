@@ -1,12 +1,10 @@
-// Import packages
-import bcrypt from "bcryptjs";
-
 // Import files-functions
 import User from "../models/user.js";
 import {
   generateJwt,
   encryptPassword,
   comparePassword,
+  validateUsername,
 } from "../utils/authUtils.js";
 
 export const userSignup = async (req, res) => {
@@ -14,9 +12,19 @@ export const userSignup = async (req, res) => {
     if (!req.body.username || !req.body.password)
       throw Error("Username and Password are required");
 
+    // Validate username
+    let username = validateUsername(req.body.username);
+
+    if (!username)
+      throw Error(
+        "'username' should not have spaces and should only contain " +
+          "english alphabets(A-Z)(a-z) or numbers(0-9) or _"
+      );
+
     // Encrypt the password
     const encryptedPassword = encryptPassword(req.body.password, 8);
     req.body.password = encryptedPassword;
+    req.body.username = username;
 
     const newUser = new User(req.body);
 

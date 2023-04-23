@@ -40,3 +40,13 @@ export const encryptPassword = (password, saltRounds) => {
 export const comparePassword = (normalPassword, hashedPassword) => {
   return bcrypt.compareSync(normalPassword, hashedPassword);
 };
+
+export const validateUsername = (username) => {
+  username = username.trim().toLowerCase();
+
+  for (let ch of username)
+    if (!((ch >= "a" && ch <= "z") || (ch >= "0" && ch <= "9") || ch == "_"))
+      return null;
+
+  return username;
+};
