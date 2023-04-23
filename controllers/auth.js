@@ -27,13 +27,10 @@ export const userSignup = async (req, res) => {
 
     await newUser.save();
 
-    res.status(200).json({ success: true, newUser });
+    res.status(200).json({ success: true, user: newUser });
   } catch (err) {
     console.log(err.message, " on Route ", "'POST /auth/signup'");
-    res.status(400).json({
-      success: false,
-      error: err.message,
-    });
+    res.status(400).json({ success: false, error: err.message });
   }
 };
 
@@ -61,7 +58,7 @@ export const userLogin = async (req, res) => {
 
       await foundUser.save();
 
-      res.status(200).json({ success: true, loggedUser: foundUser });
+      res.status(200).json({ success: true, user: foundUser });
     }
   } catch (err) {
     console.log(err.message, " on Route ", "'POST /auth/login'");

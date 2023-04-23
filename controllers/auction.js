@@ -44,7 +44,7 @@ export const createAuction = async (req, res) => {
     const newAuction = new Auction(req.body);
     await newAuction.save();
 
-    res.status(201).json({ success: true, newAuction });
+    res.status(201).json({ success: true, auction: newAuction });
   } catch (err) {
     console.log(err.message, " on Route ", "'POST /auction'");
     res.status(400).json({ success: false, error: "Not Found" });
@@ -77,7 +77,7 @@ export const makeBidOnAuction = async (req, res) => {
 
     await foundAuction.save();
 
-    res.status(201).json({ success: true, biddedAuction: foundAuction });
+    res.status(201).json({ success: true, auction: foundAuction });
   } catch (err) {
     console.log(err.message, " on Route ", "'POST /auction/:id/makeBid'");
     res.status(400).json({ success: false, error: "Bad request" });

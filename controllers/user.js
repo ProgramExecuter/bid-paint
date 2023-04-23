@@ -8,7 +8,7 @@ export const getParticularUser = async (req, res) => {
 
     if (!foundUser) throw Error();
 
-    res.status(200).json({ success: true, foundUser });
+    res.status(200).json({ success: true, user: foundUser });
   } catch (err) {
     console.log(err.message, " on Route ", "'GET /user/:id'");
     res.status(404).json({ success: false, error: "Not Found" });
@@ -28,7 +28,7 @@ export const editUserDetails = async (req, res) => {
       { returnDocument: "after" }
     );
 
-    res.status(200).json({ success: true, editedUser });
+    res.status(200).json({ success: true, user: editedUser });
   } catch (err) {
     console.log(err.message, " on Route ", "'PATCH /user/:id'");
     res.status(404).json({ success: false, error: "Not Found" });
@@ -44,7 +44,7 @@ export const deleteUser = async (req, res) => {
 
     if (!deletedUser) throw Error();
 
-    res.status(200).json({ success: true, deletedUser });
+    res.status(200).json({ success: true, user: deletedUser });
   } catch (err) {
     console.log(err.message, " on Route ", "'DELETE /user/:id'");
     res.status(404).json({ success: false, error: "Not Found" });
@@ -67,7 +67,7 @@ export const updatePassword = async (req, res) => {
     foundUser.password = encryptPassword(req.body.newPassword, 8);
     await foundUser.save();
 
-    res.status(200).json({ success: true, updatedUser: foundUser });
+    res.status(200).json({ success: true, user: foundUser });
   } catch (err) {
     console.log(err.message, " on Route ", "'PATCH /user/:id/updatePassword'");
     res.status(401).json({ success: false, error: "Unauthorized" });
