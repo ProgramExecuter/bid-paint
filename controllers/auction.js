@@ -1,11 +1,29 @@
 // Import files-functions
 import Auction from "../models/auction.js";
+import Painting from "../models/painting.js";
 
 export const getAllAuctions = async (req, res) => {
   try {
-    const auctions = await Auction.find().populate("painting bids.user");
+    let limit = 10;
+    if (req.query.limit) limit = req.query.limit;
 
-    res.status(200).json({ success: true, auctions });
+    let page = 1;
+    if (req.query.page) page = req.query.page;
+
+    let query = {};
+    if (req.query.paintingId) {
+      query.painting = {};
+      query.painting._id = req.query.paintingId;
+    }
+
+    const auctions = await Auction.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate("painting bids.user");
+
+    const count = auctions.length;
+
+    res.status(200).json({ success: true, count, page, limit, auctions });
   } catch (err) {
     console.log(err.message, " on Route ", "'GET /auction'");
     res.status(404).json({ success: false, error: "Not Found" });
